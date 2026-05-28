@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Касса — Пекарня</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">П</div>
+            <div class="logo-text">
+                <strong>Касса</strong>
+                <small>Пекарня</small>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" id="navMain">Касса</button>
+                <button class="nav-btn" id="navReports">Отчёты</button>
+            </nav>
+        </div>
+        <div class="header-right">
+            <span id="headerDate"></span>
+            <span class="clock" id="headerClock">00:00:00</span>
+        </div>
+    </header>
+
+    <!-- ============ PAGE: КАССА ============ -->
+    <div class="page page-main" id="pageMain">
+        <div class="page-center">
+
+            <div class="card">
+                <div class="card-head">Новая продажа</div>
+                <div class="card-body">
+                    <label class="label">СУММА (₸)</label>
+                    <div class="amount-wrap">
+                        <input type="number" id="amountInput" class="amount-input" placeholder="0" min="0" inputmode="numeric" autocomplete="off">
+                        <span class="amount-sign">₸</span>
+                    </div>
+                    <div class="quick-row">
+                        <div class="quick-btns" id="quickBtns"></div>
+                        <button class="gear-btn" id="btnGear" type="button" title="Настройка сумм">⚙</button>
+                    </div>
+                    <label class="label">ТИП ОПЛАТЫ</label>
+                    <div class="pay-row">
+                        <button class="pay-btn" id="btnKaspi" type="button">Kaspi</button>
+                        <button class="pay-btn" id="btnCash" type="button">Наличные</button>
+                    </div>
+                    <button class="submit-btn" id="btnSubmit" type="button" disabled>✓ Добавить продажу</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <span>Продажи за день</span>
+                    <button class="clear-btn" id="btnClear" type="button">Очистить</button>
+                </div>
+                <ul class="tx-list" id="txList">
+                    <li class="tx-empty">Продаж пока нет</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============ PAGE: ОТЧЁТЫ ============ -->
+    <div class="page page-reports" id="pageReports" style="display:none">
+        <div class="page-wide">
+
+            <!-- Date filter -->
+            <div class="card date-card">
+                <div class="date-presets">
+                    <button class="preset-btn active" id="prToday" type="button">Сегодня</button>
+                    <button class="preset-btn" id="prYesterday" type="button">Вчера</button>
+                    <button class="preset-btn" id="prWeek" type="button">7 дней</button>
+                    <button class="preset-btn" id="prMonth" type="button">30 дней</button>
+                </div>
+                <div class="date-range">
+                    <span class="date-label">с</span>
+                    <input type="date" id="dateFrom" class="date-inp">
+                    <span class="date-label">по</span>
+                    <input type="date" id="dateTo" class="date-inp">
+                    <button class="apply-btn" id="btnApply" type="button">Показать</button>
+                </div>
+                <div class="date-display" id="dateDisplay"></div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat stat-blue">
+                    <div class="stat-label">ИТОГО</div>
+                    <div class="stat-val" id="rTotal">0 ₸</div>
+                    <div class="stat-sub" id="rTotalN">0 продаж</div>
+                </div>
+                <div class="stat stat-amber">
+                    <div class="stat-label">KASPI</div>
+                    <div class="stat-val" id="rKaspi">0 ₸</div>
+                    <div class="stat-sub" id="rKaspiN">0 продаж</div>
+                </div>
+                <div class="stat stat-green">
+                    <div class="stat-label">НАЛИЧНЫЕ</div>
+                    <div class="stat-val" id="rCash">0 ₸</div>
+                    <div class="stat-sub" id="rCashN">0 продаж</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-row">
+                <div class="card chart-card chart-bar">
+                    <div class="card-head">Выручка за 7 дней</div>
+                    <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
+                </div>
+                <div class="card chart-card chart-donut">
+                    <div class="card-head">
+                        <span>Kaspi / Наличные</span>
+                        <small class="period-tag" id="periodTag">сегодня</small>
+                    </div>
+                    <div class="chart-wrap chart-wrap-donut">
+                        <canvas id="chartDonut"></canvas>
+                        <div class="donut-empty" id="donutEmpty">Нет данных</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report transactions -->
+            <div class="card">
+                <div class="card-head">
+                    <span>Транзакции за период</span>
+                    <span class="badge" id="rptBadge">0</span>
+                </div>
+                <ul class="tx-list tx-list-long" id="rptTxList">
+                    <li class="tx-empty">Нет данных</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============ MODAL: Quick Amounts ============ -->
+    <div class="overlay" id="overlay" style="display:none">
+        <div class="modal">
+            <div class="modal-head">
+                <strong>Настройка быстрых сумм</strong>
+                <button class="modal-x" id="modalX" type="button">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">Укажите суммы для быстрых кнопок. Оставьте пустым, чтобы скрыть.</p>
+                <div class="modal-grid" id="modalGrid"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="mbtn mbtn-sec" id="modalReset" type="button">Сбросить</button>
+                <button class="mbtn mbtn-pri" id="modalSave" type="button">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
