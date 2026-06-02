@@ -1,3 +1,35 @@
+// Твой личный API-адрес, который ты только что получил
+const API_URL = "https://script.google.com/macros/s/AKfycbwWc-sumrhshPhFKhd_dDB3eL_yh0HdeEDLHugCGrSHer9boodiwGhf5ARfvXJdAM60/exec";
+
+// Токен безопасности (пароль), который мы прописали в Apps Script
+const WEB_APP_TOKEN = "my_bakery_super_secret_key_2026";
+async function отправитьОтчетВТаблицу(сумма, типОплаты) {
+  // 1. Собираем данные в один пакет (объект)
+  const данныеЗаказа = {
+    token: WEB_APP_TOKEN, // Пароль для проверки
+    amount: сумма,        // Передаем сумму
+    paymentType: типОплаты // Наличные или Каспи
+  };
+
+  try {
+    // 2. Отправляем пакет по ссылке нашего API
+    const ответ = await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors", // Это важно, чтобы браузер не блокировал запросы к Google
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(данныеЗаказа) // Превращаем объект в строку JSON
+    });
+
+    // Если код дошел сюда без ошибок, значит запрос улетел
+    alert("Отчет успешно отправлен в таблицу!");
+    
+  } catch (ошибка) {
+    console.error("Ошибка при отправке данных:", ошибка);
+    alert("Не удалось отправить отчет.");
+  }
+}
 (function () {
     'use strict';
 
